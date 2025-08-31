@@ -22,11 +22,7 @@ namespace Cyan {
 
         private static int delayBaking = 1;     // (in seconds)
 		private static int blit3DSliceProperty = Shader.PropertyToID("_Slice"); // Used for Texture3D and Flipbook baking
-        #if UNITY_2021_2_OR_NEWER
-        private static GlobalKeyword bakeShaderKeyword = GlobalKeyword.Create("_BAKESHADER");
-        #else
         private static string bakeShaderKeyword = "_BAKESHADER";
-        #endif
 
         // -----------------------------------------------------------
 
@@ -247,18 +243,10 @@ namespace Cyan {
             
             CommandBuffer cmd = new CommandBuffer();
 			cmd.SetRenderTarget(renderTarget);
-            #if UNITY_2021_2_OR_NEWER
-            cmd.EnableKeyword(bakeShaderKeyword);
-            #else
             cmd.EnableShaderKeyword(bakeShaderKeyword);
-            #endif
             cmd.SetViewProjectionMatrices(Matrix4x4.identity, Matrix4x4.identity);
             cmd.DrawRenderer(renderer, renderer.sharedMaterial, 0, 0);
-            #if UNITY_2021_2_OR_NEWER
-            cmd.DisableKeyword(bakeShaderKeyword);
-            #else
             cmd.DisableShaderKeyword(bakeShaderKeyword);
-            #endif
             Graphics.ExecuteCommandBuffer(cmd);
 
 			// Read & Save
